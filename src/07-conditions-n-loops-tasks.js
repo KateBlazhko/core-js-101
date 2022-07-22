@@ -466,8 +466,23 @@ function getCommonDirectoryPath(pathes) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+
+function getMatrixProduct(m1, m2) {
+  const result = new Array(m1.length);
+
+  for (let p = 0; p < m1.length; p += 1) {
+    result[p] = Array(m2[0].length).fill(0);
+  }
+
+  for (let i = 0; i < m1.length; i += 1) {
+    for (let j = 0; j < m2[0].length; j += 1) {
+      for (let k = 0; k < m1[0].length; k += 1) {
+        result[i][j] += m1[i][k] * m2[k][j];
+      }
+    }
+  }
+
+  return result;
 }
 
 
@@ -501,8 +516,70 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function checkLine(arr) {
+  return arr.reduce((answerLine, line) => {
+    if (line
+      .reduce((res, char) => {
+        if (char === undefined) return `${res}U`;
+        if (res.includes(char)) return res;
+        return res + char;
+      }, '')
+      .length === 1 && line.length === 3) {
+      return line[0];
+    }
+
+    return answerLine;
+  }, undefined);
+}
+
+function checkDiagonal(arr) {
+  let strLeft = '';
+  let strRight = '';
+
+  for (let i = 0; i < arr.length; i += 1) {
+    for (let j = 0; j < arr[0].length; j += 1) {
+      if (i === j) {
+        if (arr[i][j] === undefined) strLeft += 'U';
+        if (!strLeft.includes(arr[i][j])) strLeft += arr[i][j];
+      }
+
+      if (i + j === arr.length - 1) {
+        if (arr[i][j] === undefined) strRight += 'U';
+        if (!strRight.includes(arr[i][j])) strRight += arr[i][j];
+      }
+    }
+  }
+  if (strLeft.length === 1) return strLeft[0];
+  if (strRight.length === 1) return strRight[0];
+  return undefined;
+}
+
+function getColumnArr(arr) {
+  const columnArr = Array(arr[0].length);
+  for (let p = 0; p < arr.length; p += 1) {
+    columnArr[p] = Array(arr.length).fill(0);
+  }
+  for (let i = 0; i < arr.length; i += 1) {
+    for (let j = 0; j < arr[0].length; j += 1) {
+      columnArr[j][i] = arr[i][j];
+    }
+  }
+  return columnArr;
+}
+
+function evaluateTicTacToePosition(position) {
+  let answer = checkLine(position);
+  if (answer !== undefined) return answer;
+
+  const columnArr = getColumnArr(position);
+
+  answer = checkLine(columnArr);
+  if (answer !== undefined) return answer;
+
+  answer = checkDiagonal(position);
+  if (answer !== undefined) return answer;
+
+  return answer;
 }
 
 

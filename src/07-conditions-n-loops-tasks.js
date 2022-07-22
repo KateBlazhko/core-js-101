@@ -468,11 +468,7 @@ function getCommonDirectoryPath(pathes) {
  */
 
 function getMatrixProduct(m1, m2) {
-  const result = new Array(m1.length);
-
-  for (let p = 0; p < m1.length; p += 1) {
-    result[p] = Array(m2[0].length).fill(0);
-  }
+  const result = Array(m1.length).fill().map(() => Array(m2[0].length).fill(0));
 
   for (let i = 0; i < m1.length; i += 1) {
     for (let j = 0; j < m2[0].length; j += 1) {
@@ -555,15 +551,16 @@ function checkDiagonal(arr) {
 }
 
 function getColumnArr(arr) {
-  const columnArr = Array(arr[0].length);
-  for (let p = 0; p < arr.length; p += 1) {
-    columnArr[p] = Array(arr.length).fill(0);
-  }
+  const columnArr = Array(arr[0].length).fill().map(() => Array(arr.length).fill(0));
+
   for (let i = 0; i < arr.length; i += 1) {
     for (let j = 0; j < arr[0].length; j += 1) {
       columnArr[j][i] = arr[i][j];
     }
   }
+
+  // console.log(columnArr);
+
   return columnArr;
 }
 
@@ -571,9 +568,7 @@ function evaluateTicTacToePosition(position) {
   let answer = checkLine(position);
   if (answer !== undefined) return answer;
 
-  const columnArr = getColumnArr(position);
-
-  answer = checkLine(columnArr);
+  answer = checkLine(getColumnArr(position));
   if (answer !== undefined) return answer;
 
   answer = checkDiagonal(position);
